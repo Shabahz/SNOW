@@ -37,11 +37,13 @@ EchoRequest.prototype = {
 		this.handleIntent(this.intentRecord);
 	},
 
-	getIntentRecord: function() {
-		if (this.REQUEST_TYPE == 'LaunchRequest')
-			keyword = 'LaunchRequest';
-		else {
-			keyword = this.request.intent.name;
+        getIntentRecord: function() {
+                // use a local variable to avoid leaking into the global scope
+                var keyword;
+                if (this.REQUEST_TYPE == 'LaunchRequest')
+                        keyword = 'LaunchRequest';
+                else {
+                        keyword = this.request.intent.name;
 			
 			this.intent_slots = this.request.intent.slots;
 			
