@@ -12,7 +12,10 @@ EchoResponseBuilder.prototype = {
 	initialize: function() {
 		this.response = {};
 		this.response.response = {};
-		this.response.version = '1;0';
+                // Alexa skills require a valid version string.
+                // The previous implementation used a semicolon which produced
+                // an invalid response payload. Use the correct dotted version.
+                this.response.version = '1.0';
 
 	},
 
@@ -32,18 +35,23 @@ EchoResponseBuilder.prototype = {
 
 	},
 
-	setCard: function(type, title, content, text, imageObj){
-		var c = {};
-		c.type = type;
-		c.text = text;
-		c.content = content;
-		c.image.smallImageUrl = imageObj.small;
-		c.image.largeImageUrl = imageObj.large;
+        setCard: function(type, title, content, text, imageObj){
+                var c = {};
+                c.type = type;
+                c.title = title;
+                c.text = text;
+                c.content = content;
 
-		this.response.response.card = c;
-		return;
+                // Initialise the image object before assigning URLs to avoid
+                // runtime errors when a card includes images.
+                c.image = {};
+                c.image.smallImageUrl = imageObj.small;
+                c.image.largeImageUrl = imageObj.large;
 
-	},
+                this.response.response.card = c;
+                return;
+
+        },
 
 	setReprompt: function(type, text, ssml){
 		var r = {};
